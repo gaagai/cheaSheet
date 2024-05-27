@@ -1,7 +1,16 @@
-import React, { useState, useRef, useEffect, memo } from 'react';
+import React, { useState, useRef, useEffect, memo, MutableRefObject } from 'react';
 
-// Memoized ListItem component to prevent unnecessary re-renders
-const ListItem = memo(({ item, onClick }) => {
+interface Item {
+  id: number;
+  name: string;
+}
+
+interface ListItemProps {
+  item: Item;
+  onClick: MutableRefObject<(id: number) => void>;
+}
+
+const ListItem: React.FC<ListItemProps> = memo(({ item, onClick }) => {
   console.log(`Rendering item: ${item.id}`);
   return (
     <li>
@@ -11,7 +20,12 @@ const ListItem = memo(({ item, onClick }) => {
   );
 });
 
-const ListComponent = ({ items, onSelect }) => {
+interface ListComponentProps {
+  items: Item[];
+  onSelect: MutableRefObject<(id: number) => void>;
+}
+
+const ListComponent: React.FC<ListComponentProps> = ({ items, onSelect }) => {
   return (
     <ul>
       {items.map(item => (
@@ -21,19 +35,19 @@ const ListComponent = ({ items, onSelect }) => {
   );
 };
 
-const App = () => {
-  const [selectedItemId, setSelectedItemId] = useState(null);
-  const [items] = useState([
+const App: React.FC = () => {
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [items] = useState<Item[]>([
     { id: 1, name: 'Item 1' },
     { id: 2, name: 'Item 2' },
     { id: 3, name: 'Item 3' },
   ]);
 
   // useRef to store a stable reference to the onSelect function
-  const handleSelectRef = useRef();
+  const handleSelectRef = useRef<(id: number) => void>(() => {});
 
   useEffect(() => {
-    handleSelectRef.current = (id) => {
+    handleSelectRef.current = (id: number) => {
       setSelectedItemId(id);
     };
   }, []);
