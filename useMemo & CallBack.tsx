@@ -1,7 +1,16 @@
 import React, { useState, useCallback, memo } from 'react';
 
-// Memoized ListItem component to prevent unnecessary re-renders
-const ListItem = memo(({ item, onClick }) => {
+interface Item {
+  id: number;
+  name: string;
+}
+
+interface ListItemProps {
+  item: Item;
+  onClick: (id: number) => void;
+}
+
+const ListItem: React.FC<ListItemProps> = memo(({ item, onClick }) => {
   console.log(`Rendering item: ${item.id}`);
   return (
     <li>
@@ -11,26 +20,31 @@ const ListItem = memo(({ item, onClick }) => {
   );
 });
 
-const ListComponent = ({ items, onSelect }) => {
+interface ListComponentProps {
+  items: Item[];
+  onSelect: (id: number) => void;
+}
+
+const ListComponent: React.FC<ListComponentProps> = ({ items, onSelect }) => {
   return (
     <ul>
-      {items.map((item) => (
+      {items.map(item => (
         <ListItem key={item.id} item={item} onClick={onSelect} />
       ))}
     </ul>
   );
 };
 
-const App = () => {
-  const [selectedItemId, setSelectedItemId] = useState(null);
-  const [items] = useState([
+const App: React.FC = () => {
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [items] = useState<Item[]>([
     { id: 1, name: 'Item 1' },
     { id: 2, name: 'Item 2' },
     { id: 3, name: 'Item 3' },
   ]);
 
   // useCallback to memoize the onSelect function
-  const handleSelect = useCallback((id) => {
+  const handleSelect = useCallback((id: number) => {
     setSelectedItemId(id);
   }, []);
 
