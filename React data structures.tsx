@@ -1,79 +1,131 @@
 Arrays:
 // Example: Rendering a list of items
-const ItemList = ({ items }) => {
-    return (
-        <ul>
-            {items.map(item => (
-                <li key={item.id}>{item.name}</li>
-            ))}
-        </ul>
-    );
+import React from 'react';
+
+interface Item {
+  id: number;
+  name: string;
+}
+
+interface ItemListProps {
+  items: Item[];
+}
+
+const ItemList: React.FC<ItemListProps> = ({ items }) => {
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
 };
 
+export default ItemList;
+
+
 // Example: Filtering and reducing data
+interface User {
+  id: number;
+  name: string;
+  age: number;
+  isActive: boolean;
+}
+
+const users: User[] = [
+  { id: 1, name: 'Alice', age: 25, isActive: true },
+  { id: 2, name: 'Bob', age: 30, isActive: false },
+  { id: 3, name: 'Charlie', age: 35, isActive: true }
+];
+
 const totalActiveUsersAge = users
-    .filter(user => user.isActive)
-    .reduce((total, user) => total + user.age, 0);
+  .filter(user => user.isActive)
+  .reduce((total, user) => total + user.age, 0);
 //  Methods: map, filter, reduce, forEach, find, some, every, concat, slice, splice.
 
 Objects:
 // Example: Managing component state
-const [user, setUser] = useState({ name: 'Alice', age: 25 });
+import React, { useState } from 'react';
 
-// Updating state
-setUser(prevState => ({ ...prevState, age: 26 }));
+interface User {
+  name: string;
+  age: number;
+}
 
-// Destructuring props
-const UserProfile = ({ user: { name, age } }) => (
-    <div>{name} is {age} years old</div>
+const UserProfile: React.FC<{ user: User }> = ({ user: { name, age } }) => (
+  <div>{name} is {age} years old</div>
 );
 
+const UserComponent: React.FC = () => {
+  const [user, setUser] = useState<User>({ name: 'Alice', age: 25 });
+
+  const updateUser = () => {
+    setUser(prevState => ({ ...prevState, age: 26 }));
+  };
+
+  return (
+    <div>
+      <UserProfile user={user} />
+      <button onClick={updateUser}>Update Age</button>
+    </div>
+  );
+};
+
+export default UserComponent;
 // Methods: Accessing properties, destructuring, spreading, Object.keys, Object.values, Object.entries
 
 Sets:
 // Example: Managing unique tags
-const TagManager = () => {
-    const [tags, setTags] = useState(new Set(['react', 'javascript']));
+import React, { useState } from 'react';
 
-    const addTag = (tag) => {
-        setTags(new Set([...tags, tag]));
-    };
+const TagManager: React.FC = () => {
+  const [tags, setTags] = useState<Set<string>>(new Set(['react', 'javascript']));
 
-    return (
-        <div>
-            <ul>
-                {[...tags].map(tag => (
-                    <li key={tag}>{tag}</li>
-                ))}
-            </ul>
-            <button onClick={() => addTag('redux')}>Add Tag</button>
-        </div>
-    );
+  const addTag = (tag: string) => {
+    setTags(new Set([...tags, tag]));
+  };
+
+  return (
+    <div>
+      <ul>
+        {[...tags].map(tag => (
+          <li key={tag}>{tag}</li>
+        ))}
+      </ul>
+      <button onClick={() => addTag('redux')}>Add Tag</button>
+    </div>
+  );
 };
+
+export default TagManager;
 //Methods: add, delete, has, clear, forEach, size.
 
 Maps:
 // Example: Managing configuration settings
-const ConfigManager = () => {
-    const [settings, setSettings] = useState(new Map([
-        ['theme', 'dark'],
-        ['layout', 'grid'],
-    ]));
+import React, { useState } from 'react';
 
-    const updateSetting = (key, value) => {
-        setSettings(new Map(settings).set(key, value));
-    };
+const ConfigManager: React.FC = () => {
+  const [settings, setSettings] = useState<Map<string, string>>(new Map([
+    ['theme', 'dark'],
+    ['layout', 'grid'],
+  ]));
 
-    return (
-        <div>
-            <ul>
-                {[...settings.entries()].map(([key, value]) => (
-                    <li key={key}>{key}: {value}</li>
-                ))}
-            </ul>
-            <button onClick={() => updateSetting('theme', 'light')}>Switch to Light Theme</button>
-        </div>
-    );
+  const updateSetting = (key: string, value: string) => {
+    setSettings(new Map(settings).set(key, value));
+  };
+
+  return (
+    <div>
+      <ul>
+        {[...settings.entries()].map(([key, value]) => (
+          <li key={key}>{key}: {value}</li>
+        ))}
+      </ul>
+      <button onClick={() => updateSetting('theme', 'light')}>Switch to Light Theme</button>
+    </div>
+  );
 };
+
+export default ConfigManager;
 // Methods: set, get, has, delete, clear, forEach, size.
 
